@@ -1,17 +1,14 @@
-#!/usr/bin/python
-# coding:utf-8
-
-
 import json
+import os
 import re
 import time
-import os
-import unicodedata
+from multiprocessing import Pool
+
 import requests
+import unicodedata
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from multiprocessing import Pool
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
@@ -225,19 +222,18 @@ if __name__ == '__main__':
     urls_index = [str(i) for i in range(len(urls))]
     zip_args = list(zip(urls, urls_index))
 
-    crawl_from_url(urls[1], str(1))
-    # pool = Pool(4)
-    # pool.starmap(crawl_from_url, zip_args)
-    # pool.close()
-    # pool.join()
+    pool = Pool(4)
+    pool.starmap(crawl_from_url, zip_args)
+    pool.close()
+    pool.join()
 
     # transDict2Json
-    # with open("data.json", "w", encoding="utf-8") as f_all:
-    #     for ind in range(len(urls)):
-    #         if not os.path.exists(JSON_DIR_PATH + str(ind) + ".json"):
-    #             crawl_from_url(urls[ind], str(ind))
-    #         with open(JSON_DIR_PATH + str(ind) + ".json", 'r', encoding="utf-8") as f:
-    #             f_all.write(f.readline() + "\n")
+    with open("data.json", "w", encoding="utf-8") as f_all:
+        for ind in range(len(urls)):
+            if not os.path.exists(JSON_DIR_PATH + str(ind) + ".json"):
+                crawl_from_url(urls[ind], str(ind))
+            with open(JSON_DIR_PATH + str(ind) + ".json", 'r', encoding="utf-8") as f:
+                f_all.write(f.readline() + "\n")
 
     # show the result of json file
     # with open('data.json', encoding='utf-8') as fin:
