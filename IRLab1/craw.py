@@ -16,7 +16,7 @@ HEADERS = {
     "Connection": "close"
 }
 
-URLS_FILE_PATH = "urls.txt"
+URLS_FILE_PATH = "urls.json"
 IMG_DIR_PATH = r"attachment/img/"
 DOC_DIR_PATH = r"attachment/doc/"
 OTHER_DIR_PATH = r"attachment/other/"
@@ -74,7 +74,8 @@ def get_urls():
         title_labels = driver.find_elements_by_class_name("news_title")
         for title_label in title_labels:
             target_urls.append(title_label.find_element_by_tag_name('a').get_attribute("href"))
-        time.sleep(0.1)
+        print(index_url, target_urls)
+        time.sleep(1)
     driver.quit()
     target_urls = list(set(target_urls))
     ret_urls = []
@@ -83,6 +84,9 @@ def get_urls():
             continue
         if check_url(target_url):
             ret_urls.append(target_url)
+        else:
+            print("ERROR URL:")
+            print(target_url)
     return ret_urls
 
 
@@ -129,7 +133,7 @@ def crawl_from_url(news_url, cur_id):
     from a url , get url,title,paragraphs and filesName
     :return: the target dict
     """
-    # time.sleep(1)
+    time.sleep(1)
 
     print(news_url, cur_id)
     result = {"url": news_url}
@@ -137,7 +141,9 @@ def crawl_from_url(news_url, cur_id):
 
     news_response.encoding = news_response.apparent_encoding
     soup = BeautifulSoup(news_response.text, 'html5lib')
+
     result["title"] = unicodedata.normalize('NFKC', soup.find("title").text)
+
     contents = soup.find("div", attrs={"class": "wp_articlecontent"})
 
     if contents is None:
@@ -146,10 +152,11 @@ def crawl_from_url(news_url, cur_id):
         with open(JSON_DIR_PATH + cur_id + ".json", "w", encoding="utf-8") as json_f:
             json.dump(result, json_f, ensure_ascii=False)
         return
-
     result["paragraphs"] = unicodedata.normalize('NFKC', contents.text)
-    img_labels = contents.find_all("img")
+
     result["file_name"] = []
+
+    img_labels = contents.find_all("img")
 
     for img_label in img_labels:
         img_url = "http://hitgs.hit.edu.cn" + img_label.get("src")
@@ -213,29 +220,35 @@ if __name__ == '__main__':
     if not os.path.exists(JSON_DIR_PATH):
         os.makedirs(JSON_DIR_PATH)
     print("Finish create dir")
+
     urls = get_urls()
-    with open(URLS_FILE_PATH, 'w') as f:
-        json.dump(urls, f)
+    # with open(URLS_FILE_PATH, 'w') as f:
+    #     json.dump(urls, f)
 
     # use multi processes for crawl
 
     urls_index = [str(i) for i in range(len(urls))]
     zip_args = list(zip(urls, urls_index))
 
-    pool = Pool(4)
+    pool = Pool(64)
     pool.starmap(crawl_from_url, zip_args)
     pool.close()
     pool.join()
 
     # transDict2Json
+    empty_page_num = 0
+    page_with_files_num = 0
     with open("data.json", "w", encoding="utf-8") as f_all:
         for ind in range(len(urls)):
             if not os.path.exists(JSON_DIR_PATH + str(ind) + ".json"):
                 crawl_from_url(urls[ind], str(ind))
             with open(JSON_DIR_PATH + str(ind) + ".json", 'r', encoding="utf-8") as f:
-                f_all.write(f.readline() + "\n")
-
-    # show the result of json file
-    # with open('data.json', encoding='utf-8') as fin:
-    #     read_results = [json.loads(line.strip()) for line in fin.readlines()]
-    # print(read_results)
+                temp_result_dict = json.loads(f.readline())
+                if temp_result_dict["paragraphs"] == "":
+                    empty_page_num += 1
+                if len(temp_result_dict["file_name"]) != 0:
+                    page_with_files_num += 1
+                f_all.write(json.dumps(temp_result_dict, ensure_ascii=False) + "\n")
+    print("Pages Count：", len(urls))
+    print("Pages Without Paragraphs Count：", empty_page_num)
+    print("Pages With Files Count：", page_with_files_num)

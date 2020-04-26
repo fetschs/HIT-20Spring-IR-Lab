@@ -9,13 +9,18 @@ MODEL_NAME = r"cws.model"
 MODEL_PATH = os.path.join(LTP_MODEL_DIR_PATH, MODEL_NAME)
 if not os.path.exists(LTP_MODEL_DIR_PATH):
     os.makedirs(LTP_MODEL_DIR_PATH)
-    print("请将对应模型放置在对应路径： " + MODEL_PATH)
+    print("pleas put the ltp model to： " + MODEL_PATH)
 
 segment_or = Segmentor()
 segment_or.load(MODEL_PATH)
 
 
 def get_sentences(target_string):
+    """
+    remove some space char, split sentences.
+    :param target_string: string will be split to sentences.
+    :return: sentences.
+    """
     target_string = target_string.replace("\t", "")
     target_string = target_string.replace("\n", "")
     target_string = target_string.replace("\r", "")
@@ -25,6 +30,11 @@ def get_sentences(target_string):
 
 
 def delete_stop_word(target_words):
+    """
+    delete stop words in the result of segment.
+    :param target_words: the result of segment.
+    :return: result of segment without stop words.
+    """
     ret_words = []
     for target_word in target_words:
         if target_word not in stop_words:
@@ -33,6 +43,11 @@ def delete_stop_word(target_words):
 
 
 def wordSeg(target_sentence):
+    """
+    get result of segment.
+    :param target_sentence: sentence will be handle.
+    :return: result of segment.
+    """
     words = segment_or.segment(target_sentence)
     words = delete_stop_word(words)
     return words
