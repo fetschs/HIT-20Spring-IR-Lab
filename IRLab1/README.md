@@ -4,6 +4,8 @@ pip install requirement.txt
 
 pyltp的安装很可能遇到各种奇怪的问题，可以联系我解决。
 
+LTP模型需要自行下载配置。
+
 selenium库所使用的chromedriver需要安装本地的chrome浏览器对应版本
 
 或者直接使用爬取好的urls.txt

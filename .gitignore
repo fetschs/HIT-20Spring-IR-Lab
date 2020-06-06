@@ -149,6 +149,13 @@ cython_debug/
 out
 gen
 
-/IRLab1/attachment
-/IRLab1/jsons
-/IRLab1/ltp_model
+/IRLab1/attachment/
+/IRLab1/jsons/
+/IRLab1/ltp_model/
+/IRLab2/实验2要求   
+/IRLab2/ltp_model
+/IRLab2/data/handled_passages.pkl
+/IRLab2/data/interval_index.pkl
+/IRLab2/data/passages_config.pkl
+/IRLab2/data/train_feature.dat
+/IRLab2/data/test_feature.dat
