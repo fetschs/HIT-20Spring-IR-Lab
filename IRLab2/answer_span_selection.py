@@ -9,7 +9,7 @@ import config
 import segment
 from answer_sentence_selection import generate_feature, eval_model, get_selected_result
 from metric import cal_bleu
-from preprocessed import load_index_in_disk, read_train_dataset, read_test_dataset, get_related_result
+from build_retrieval_model import load_index_in_disk, read_train_dataset, read_test_dataset, get_related_result
 
 
 def rules(questions, answer_sentences, gold_answers=None):

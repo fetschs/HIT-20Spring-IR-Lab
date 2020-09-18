@@ -234,7 +234,7 @@ def preprocess_index_to_disk():
     Returns:
 
     """
-    passages_dict = read_passages_from_file(config.PASSAGES_FILE_PATH)
+    passages_dict = read_passages_from_file(config.PAGE_FILE_PATH)
     handled_passages_dict = handle_passages(passages_dict)
     with open(config.HANDLED_PASSAGES_FILE_PATH, "wb") as handled_passages_dict_file:
         pickle.dump(handled_passages_dict, handled_passages_dict_file)

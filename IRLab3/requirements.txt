@@ -1,0 +1,8 @@
+tqdm==4.45.0
+pywin32==223
+python_docx==0.8.10
+pdfplumber==0.5.21
+docx==0.2.4
+pyltp==0.2.1
+PyQt5==5.15.1
+scikit_learn==0.23.2

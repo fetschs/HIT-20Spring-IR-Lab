@@ -18,10 +18,10 @@ HEADERS = {
 
 URLS_FILE_PATH = "urls.json"
 IMG_DIR_PATH = r"attachment/img/"
-DOC_DIR_PATH = r"attachment/doc/"
+DOC_DIR_PATH = r"attachment/documents/"
 OTHER_DIR_PATH = r"attachment/other/"
 JSON_DIR_PATH = r"jsons/"
-DOC_FILE_TYPE_LIST = ["doc", "docx", "txt", "pdf"]
+DOC_FILE_TYPE_LIST = ["documents", "docx", "txt", "pdf"]
 
 
 def get_http_status_code(target_url):
@@ -106,7 +106,7 @@ def fix_invalid_name(name):
 
 def make_sure_attach_path(attach_name, cur_id):
     """
-    check whether doc or other attachment.
+    check whether documents or other attachment.
     :param attach_name:
     :param cur_id:
     :return:

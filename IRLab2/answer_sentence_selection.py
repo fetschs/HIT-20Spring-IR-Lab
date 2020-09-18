@@ -9,7 +9,7 @@ from tqdm import tqdm
 
 import config
 import segment
-from preprocessed import read_train_dataset, load_index_in_disk, get_related_result
+from build_retrieval_model import read_train_dataset, load_index_in_disk, get_related_result
 
 
 def cal_lcs_len(str_a, str_b):
